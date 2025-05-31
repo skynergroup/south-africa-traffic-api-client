@@ -1,0 +1,36 @@
+{
+  "name": "i-traffic-api-client",
+  "version": "1.0.0",
+  "description": "JavaScript client for the South African i-traffic.co.za API",
+  "main": "src/api/iTrafficClient.js",
+  "type": "module",
+  "scripts": {
+    "demo": "node src/examples/demo.js",
+    "test": "node src/examples/demo.js",
+    "serve": "npx http-server src/web/public -p 8080 -o",
+    "start": "npm run demo",
+    "cli": "node src/cli/index.js",
+    "itraffic": "node src/cli/index.js"
+  },
+  "bin": {
+    "itraffic": "./src/cli/index.js"
+  },
+  "keywords": [
+    "traffic",
+    "south-africa",
+    "api",
+    "transportation",
+    "real-time"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
