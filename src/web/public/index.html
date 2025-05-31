@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>i-traffic API Client - Web Demo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚦 i-traffic API Client</h1>
+            <p>South African Traffic Information - Web Demo</p>
+        </div>
+
+        <div class="config-section">
+            <div class="config-form">
+                <div class="form-group">
+                    <label for="apiKey">API Key:</label>
+                    <input type="password" id="apiKey" placeholder="Enter your i-traffic API key">
+                </div>
+                <div class="form-group">
+                    <label for="format">Response Format:</label>
+                    <select id="format">
+                        <option value="json">JSON</option>
+                        <option value="xml">XML</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="timeout">Timeout (ms):</label>
+                    <input type="number" id="timeout" value="10000" min="1000" max="60000">
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-primary" onclick="fetchAlerts()">🚨 Get Alerts</button>
+            <button class="btn btn-primary" onclick="fetchCameras()">📹 Get Cameras</button>
+            <button class="btn btn-primary" onclick="fetchEvents()">🚧 Get Events</button>
+            <button class="btn btn-secondary" onclick="fetchMessageSigns()">📢 Get Message Signs</button>
+            <button class="btn btn-secondary" onclick="fetchRoadways()">🛣️ Get Roadways</button>
+            <button class="btn btn-success" onclick="fetchAllData()">🔄 Get All Data</button>
+        </div>
+
+        <div class="advanced-controls">
+            <h3>🔍 Advanced Operations</h3>
+            <div class="advanced-grid">
+                <button class="btn btn-info" onclick="getTrafficSummary()">📊 Traffic Summary</button>
+                <button class="btn btn-info" onclick="searchAll()">🔍 Search All</button>
+                <button class="btn btn-info" onclick="getActiveCameras()">📹 Active Cameras</button>
+                <button class="btn btn-info" onclick="getActiveEvents()">🚧 Active Events</button>
+            </div>
+            <div class="search-section">
+                <input type="text" id="searchTerm" placeholder="Enter search term (e.g., N1, accident, roadwork)">
+                <button class="btn btn-warning" onclick="performSearch()">🔍 Search</button>
+            </div>
+        </div>
+
+        <div class="results" id="results">
+            <div class="status">
+                <p>👆 Click any button above to fetch traffic data</p>
+                <p style="margin-top: 10px; font-size: 0.9em; color: #6c757d;">
+                    Make sure to enter your API key first!
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
