@@ -122,6 +122,28 @@ const roadways = new RoadwaysEndpoint(baseClient);
 - `getStatistics()` - Get roadway statistics
 - `validateRoadway(roadwayName)` - Validate roadway name
 
+### MapsEndpoint
+
+Embedded map generation operations.
+
+```javascript
+import { MapsEndpoint } from '../src/endpoints/maps.js';
+
+const maps = new MapsEndpoint(baseClient);
+```
+
+#### Methods
+
+- `generateEmbedCode(options)` - Generate complete iframe embed code
+- `generateEmbedUrl(options)` - Generate map URL for embedding
+- `getAvailableRegions()` - Get available regions
+- `getAvailableLayers()` - Get available map layers
+- `getAvailableSizes()` - Get available map sizes
+- `generateFullMap(options)` - Generate embed code with all layers
+- `generateIncidentsMap(options)` - Generate embed code for incidents only
+- `generateTrafficFlowMap(options)` - Generate embed code for traffic flow
+- `getConfigurationSummary()` - Get summary of available options
+
 ## Main Client
 
 ### ITrafficClient
@@ -146,6 +168,7 @@ const client = new ITrafficClient({
 - `events` - EventsEndpoint instance
 - `messageSigns` - MessageSignsEndpoint instance
 - `roadways` - RoadwaysEndpoint instance
+- `maps` - MapsEndpoint instance
 
 #### Methods
 

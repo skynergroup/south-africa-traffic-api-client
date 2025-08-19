@@ -12,6 +12,9 @@ export class ITrafficWebClient {
         if (!this.apiKey) {
             throw new Error('API key is required');
         }
+
+        // Initialize maps functionality (doesn't require API key)
+        this.maps = new WebMapsClient();
     }
 
     /**
@@ -156,5 +159,144 @@ export class ITrafficWebClient {
             timeout: this.timeout,
             apiKeySet: !!this.apiKey
         };
+    }
+}
+
+/**
+ * Browser-compatible Maps client for generating embedded maps
+ * Doesn't require API key as it generates iframe embed codes
+ */
+class WebMapsClient {
+    constructor() {
+        this.baseMapUrl = 'https://www.i-traffic.co.za/Map/EmbeddedMap';
+
+        this.regions = {
+            ALL: 'ALL',
+            GP: 'GP',
+            KZN: 'KZN',
+            WC: 'WC'
+        };
+
+        this.layers = {
+            TRAFFIC_SPEEDS: 'TrafficSpeeds',
+            CAMERAS: 'Cameras',
+            INCIDENTS: 'Incidents',
+            CONSTRUCTION: 'Construction',
+            CLOSURES: 'Closures',
+            CONGESTION: 'Congestion',
+            MESSAGE_SIGNS: 'MessageSigns',
+            WEATHER_FORECAST: 'WeatherForecast'
+        };
+
+        this.sizes = {
+            FULL: { value: 0, width: '810px', height: '640px', name: 'Full' },
+            LARGE: { value: 1, width: '600px', height: '480px', name: 'Large' },
+            SMALL: { value: 2, width: '400px', height: '320px', name: 'Small' },
+            ALERT_TICKER: { value: 3, width: '100%', height: '60px', name: 'Alert Ticker' }
+        };
+    }
+
+    generateEmbedCode(options = {}) {
+        const config = this._validateAndNormalizeOptions(options);
+        const url = this._buildMapUrl(config);
+        const sizeConfig = this.sizes[config.size];
+
+        const width = config.width || sizeConfig.width;
+        const height = config.height || sizeConfig.height;
+
+        const iframeAttributes = {
+            frameborder: '0',
+            style: 'border: none; overflow: hidden;',
+            scrolling: 'no',
+            src: url,
+            width: width,
+            height: height,
+            ...config.iframeAttributes
+        };
+
+        const attributeString = Object.entries(iframeAttributes)
+            .map(([key, value]) => `${key}="${value}"`)
+            .join(' ');
+
+        return `<iframe ${attributeString}></iframe>`;
+    }
+
+    generateEmbedUrl(options = {}) {
+        const config = this._validateAndNormalizeOptions(options);
+        return this._buildMapUrl(config);
+    }
+
+    getAvailableRegions() {
+        return {
+            ALL: 'All Regions',
+            GP: 'Gauteng',
+            KZN: 'KwaZulu-Natal',
+            WC: 'Western Cape'
+        };
+    }
+
+    getAvailableLayers() {
+        return {
+            TRAFFIC_SPEEDS: 'Traffic Speeds',
+            CAMERAS: 'Traffic Cameras',
+            INCIDENTS: 'Traffic Incidents',
+            CONSTRUCTION: 'Road Construction',
+            CLOSURES: 'Road Closures',
+            CONGESTION: 'Traffic Congestion',
+            MESSAGE_SIGNS: 'Variable Message Signs',
+            WEATHER_FORECAST: 'Weather Forecasts'
+        };
+    }
+
+    getAvailableSizes() {
+        const result = {};
+        Object.entries(this.sizes).forEach(([key, config]) => {
+            result[key] = {
+                name: config.name,
+                width: config.width,
+                height: config.height
+            };
+        });
+        return result;
+    }
+
+    _validateAndNormalizeOptions(options) {
+        const config = {
+            region: options.region || 'ALL',
+            layers: options.layers || Object.values(this.layers),
+            size: options.size || 'FULL',
+            width: options.width,
+            height: options.height,
+            iframeAttributes: options.iframeAttributes || {}
+        };
+
+        if (!this.regions[config.region]) {
+            throw new Error(`Invalid region: ${config.region}`);
+        }
+
+        if (!this.sizes[config.size]) {
+            throw new Error(`Invalid size: ${config.size}`);
+        }
+
+        if (!Array.isArray(config.layers)) {
+            config.layers = [config.layers];
+        }
+
+        const validLayers = Object.values(this.layers);
+        const invalidLayers = config.layers.filter(layer => !validLayers.includes(layer));
+        if (invalidLayers.length > 0) {
+            throw new Error(`Invalid layers: ${invalidLayers.join(', ')}`);
+        }
+
+        return config;
+    }
+
+    _buildMapUrl(config) {
+        const params = new URLSearchParams();
+        params.append('region', config.region);
+        params.append('layers', config.layers.join(','));
+        params.append('size', this.sizes[config.size].value);
+
+        return `${this.baseMapUrl}?${params.toString()}`;
     }
 }

@@ -4,6 +4,7 @@ import { CamerasEndpoint } from './cameras.js';
 import { EventsEndpoint } from './events.js';
 import { MessageSignsEndpoint } from './messageSigns.js';
 import { RoadwaysEndpoint } from './roadways.js';
+import { MapsEndpoint } from './maps.js';
 
 /**
  * Main API client that combines all endpoint modules
@@ -28,6 +29,7 @@ export class ITrafficClient {
     this.events = new EventsEndpoint(this.baseClient);
     this.messageSigns = new MessageSignsEndpoint(this.baseClient);
     this.roadways = new RoadwaysEndpoint(this.baseClient);
+    this.maps = new MapsEndpoint(this.baseClient);
 
     this.baseClient.logger.info('ITrafficClient initialized with all endpoints');
   }
@@ -216,5 +218,6 @@ export {
   EventsEndpoint,
   MessageSignsEndpoint,
   RoadwaysEndpoint,
+  MapsEndpoint,
   BaseApiClient
 };

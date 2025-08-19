@@ -260,6 +260,94 @@ const [alerts, cameras] = await Promise.all([
 ]);
 ```
 
+## Working with Embedded Maps
+
+```javascript
+// Generate a full map embed for all regions
+const fullMapEmbed = client.maps.generateEmbedCode({
+  region: 'ALL',
+  size: 'FULL',
+  layers: ['TrafficSpeeds', 'Cameras', 'Incidents', 'Construction', 'Closures']
+});
+
+// Generate a Gauteng-specific traffic flow map
+const gautengTrafficMap = client.maps.generateEmbedCode({
+  region: 'GP',
+  size: 'LARGE',
+  layers: ['TrafficSpeeds', 'Congestion', 'Cameras']
+});
+
+// Generate just the URL for embedding
+const mapUrl = client.maps.generateEmbedUrl({
+  region: 'KZN',
+  size: 'SMALL',
+  layers: ['Incidents', 'Closures']
+});
+
+// Get available configuration options
+const regions = client.maps.getAvailableRegions();
+const layers = client.maps.getAvailableLayers();
+const sizes = client.maps.getAvailableSizes();
+
+console.log('Available regions:', regions);
+console.log('Available layers:', layers);
+console.log('Available sizes:', sizes);
+```
+
+### Quick Map Presets
+
+```javascript
+// Full map with all layers
+const fullMap = client.maps.generateFullMap({
+  region: 'ALL',
+  size: 'FULL'
+});
+
+// Incidents and closures only
+const incidentsMap = client.maps.generateIncidentsMap({
+  region: 'GP',
+  size: 'LARGE'
+});
+
+// Traffic flow information
+const trafficFlowMap = client.maps.generateTrafficFlowMap({
+  region: 'WC',
+  size: 'SMALL'
+});
+```
+
+### Custom Map Configurations
+
+```javascript
+// Alert ticker for website header
+const alertTicker = client.maps.generateEmbedCode({
+  region: 'ALL',
+  size: 'ALERT_TICKER',
+  layers: ['Incidents', 'Closures']
+});
+
+// Custom dimensions
+const customMap = client.maps.generateEmbedCode({
+  region: 'GP',
+  size: 'LARGE',
+  layers: ['TrafficSpeeds', 'Cameras'],
+  width: '500px',
+  height: '400px'
+});
+
+// With custom iframe attributes
+const mapWithAttributes = client.maps.generateEmbedCode({
+  region: 'ALL',
+  size: 'FULL',
+  layers: ['TrafficSpeeds', 'Incidents'],
+  iframeAttributes: {
+    'data-region': 'south-africa',
+    'class': 'traffic-map',
+    'title': 'South Africa Traffic Map'
+  }
+});
+```
+
 2. **Use getAllTrafficData()** for bulk operations:
 ```javascript
 const allData = await client.getAllTrafficData();

@@ -10,8 +10,9 @@ A comprehensive JavaScript/Node.js client for the South African i-traffic.co.za 
 
 - **🏗️ Modular Architecture**: Clean separation with base client, endpoint modules, CLI interface, and web demo
 - **📊 Complete API Coverage**: All 5 i-traffic endpoints (alerts, cameras, events, message signs, roadways)
+- **🗺️ Embedded Maps**: Generate iframe embed codes for interactive traffic maps with customizable regions and layers
 - **🖥️ CLI Tools**: Full command-line interface for all operations with formatted output
-- **🌐 Web Interface**: Interactive browser-based demo application
+- **🌐 Web Interface**: Interactive browser-based demo application with map generation tools
 - **🔧 Developer Friendly**: TypeScript-ready with comprehensive JSDoc comments
 - **⚡ Performance Optimized**: Parallel requests, error handling, and timeout management
 - **🔒 Secure**: Environment-based API key management
@@ -128,6 +129,7 @@ south-africa-traffic-api-client/
 | `/getevents` | Traffic events | `client.events.getAll()` |
 | `/getmessagesigns` | Variable message signs | `client.messageSigns.getAll()` |
 | `/getroadways` | Roadway information | `client.roadways.getAll()` |
+| **Maps** | Embedded map generation | `client.maps.generateEmbedCode()` |
 
 ## 🔑 Getting an API Key
 
@@ -180,6 +182,13 @@ const roadworkSigns = await client.messageSigns.searchMessages('roadwork');
 
 // Get roadways by type
 const nationalRoads = await client.roadways.getByType('N');
+
+// Generate embedded map
+const mapEmbed = client.maps.generateEmbedCode({
+  region: 'GP',
+  layers: ['TrafficSpeeds', 'Cameras', 'Incidents'],
+  size: 'LARGE'
+});
 ```
 
 ### Error Handling

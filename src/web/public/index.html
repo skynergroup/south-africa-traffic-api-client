@@ -39,6 +39,7 @@
             <button class="btn btn-primary" onclick="fetchEvents()">🚧 Get Events</button>
             <button class="btn btn-secondary" onclick="fetchMessageSigns()">📢 Get Message Signs</button>
             <button class="btn btn-secondary" onclick="fetchRoadways()">🛣️ Get Roadways</button>
+            <button class="btn btn-map" onclick="showMapSection()">🗺️ Embedded Maps</button>
             <button class="btn btn-success" onclick="fetchAllData()">🔄 Get All Data</button>
         </div>
 
@@ -56,11 +57,54 @@
             </div>
         </div>
 
+        <!-- Map Configuration Section (initially hidden) -->
+        <div class="map-section" id="mapSection" style="display: none;">
+            <h3>🗺️ Embedded Map Configuration</h3>
+            <div class="map-config">
+                <div class="form-group">
+                    <label for="mapRegion">Region:</label>
+                    <select id="mapRegion">
+                        <option value="ALL">All Regions</option>
+                        <option value="GP">Gauteng</option>
+                        <option value="KZN">KwaZulu-Natal</option>
+                        <option value="WC">Western Cape</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="mapSize">Size:</label>
+                    <select id="mapSize">
+                        <option value="FULL">Full (810x640)</option>
+                        <option value="LARGE">Large (600x480)</option>
+                        <option value="SMALL">Small (400x320)</option>
+                        <option value="ALERT_TICKER">Alert Ticker (100%x60)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Map Layers:</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" id="layer-traffic" value="TrafficSpeeds" checked> Traffic Speeds</label>
+                        <label><input type="checkbox" id="layer-cameras" value="Cameras" checked> Cameras</label>
+                        <label><input type="checkbox" id="layer-incidents" value="Incidents" checked> Incidents</label>
+                        <label><input type="checkbox" id="layer-construction" value="Construction" checked> Construction</label>
+                        <label><input type="checkbox" id="layer-closures" value="Closures" checked> Closures</label>
+                        <label><input type="checkbox" id="layer-congestion" value="Congestion" checked> Congestion</label>
+                        <label><input type="checkbox" id="layer-signs" value="MessageSigns" checked> Message Signs</label>
+                        <label><input type="checkbox" id="layer-weather" value="WeatherForecast" checked> Weather</label>
+                    </div>
+                </div>
+                <div class="map-controls">
+                    <button class="btn btn-primary" onclick="generateMapEmbed()">🗺️ Generate Map</button>
+                    <button class="btn btn-secondary" onclick="generateMapUrl()">🔗 Get URL Only</button>
+                    <button class="btn btn-info" onclick="showMapPresets()">📋 Quick Presets</button>
+                </div>
+            </div>
+        </div>
+
         <div class="results" id="results">
             <div class="status">
-                <p>👆 Click any button above to fetch traffic data</p>
+                <p>👆 Click any button above to fetch traffic data or generate embedded maps</p>
                 <p style="margin-top: 10px; font-size: 0.9em; color: #6c757d;">
-                    Make sure to enter your API key first!
+                    Make sure to enter your API key first for data fetching!
                 </p>
             </div>
         </div>

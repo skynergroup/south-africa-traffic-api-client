@@ -382,6 +382,213 @@ async function performSearch() {
 // Alias for backward compatibility
 window.searchAll = performSearch;
 
+// Map Functions
+function showMapSection() {
+    const mapSection = document.getElementById('mapSection');
+    const isVisible = mapSection.style.display !== 'none';
+
+    if (isVisible) {
+        mapSection.style.display = 'none';
+    } else {
+        mapSection.style.display = 'block';
+        // Scroll to map section
+        mapSection.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+function getSelectedLayers() {
+    const checkboxes = document.querySelectorAll('.checkbox-group input[type="checkbox"]:checked');
+    return Array.from(checkboxes).map(cb => cb.value);
+}
+
+function generateMapEmbed() {
+    try {
+        const region = document.getElementById('mapRegion').value;
+        const size = document.getElementById('mapSize').value;
+        const layers = getSelectedLayers();
+
+        if (layers.length === 0) {
+            showError('Please select at least one map layer');
+            return;
+        }
+
+        // Create a simple maps client (doesn't need API key)
+        const mapsClient = new WebMapsClient();
+
+        const embedCode = mapsClient.generateEmbedCode({
+            region,
+            size,
+            layers
+        });
+
+        const url = mapsClient.generateEmbedUrl({
+            region,
+            size,
+            layers
+        });
+
+        const results = document.getElementById('results');
+        results.innerHTML = `
+            <div class="result-item success">
+                <div class="result-header">
+                    <h3>🗺️ Generated Embedded Map</h3>
+                    <div class="result-meta">
+                        <span>Region: ${region}</span>
+                        <span>Size: ${size}</span>
+                        <span>Layers: ${layers.length}</span>
+                    </div>
+                </div>
+                <div class="map-preview">
+                    <h4>Live Preview:</h4>
+                    ${embedCode}
+                </div>
+                <div class="map-preview">
+                    <h4>Embed Code:</h4>
+                    <div class="embed-code">${embedCode}</div>
+                </div>
+                <div class="map-preview">
+                    <h4>Direct URL:</h4>
+                    <div class="embed-code">${url}</div>
+                </div>
+            </div>
+        `;
+
+        // Scroll to results
+        results.scrollIntoView({ behavior: 'smooth' });
+
+    } catch (error) {
+        showError('Failed to generate map embed', error.message);
+    }
+}
+
+function generateMapUrl() {
+    try {
+        const region = document.getElementById('mapRegion').value;
+        const size = document.getElementById('mapSize').value;
+        const layers = getSelectedLayers();
+
+        if (layers.length === 0) {
+            showError('Please select at least one map layer');
+            return;
+        }
+
+        const mapsClient = new WebMapsClient();
+        const url = mapsClient.generateEmbedUrl({
+            region,
+            size,
+            layers
+        });
+
+        const results = document.getElementById('results');
+        results.innerHTML = `
+            <div class="result-item success">
+                <div class="result-header">
+                    <h3>🔗 Map URL Generated</h3>
+                    <div class="result-meta">
+                        <span>Region: ${region}</span>
+                        <span>Size: ${size}</span>
+                        <span>Layers: ${layers.length}</span>
+                    </div>
+                </div>
+                <div class="map-preview">
+                    <h4>Direct URL:</h4>
+                    <div class="embed-code">${url}</div>
+                    <button class="btn btn-secondary" onclick="copyToClipboard('${url}')" style="margin-top: 10px;">📋 Copy URL</button>
+                </div>
+            </div>
+        `;
+
+        results.scrollIntoView({ behavior: 'smooth' });
+
+    } catch (error) {
+        showError('Failed to generate map URL', error.message);
+    }
+}
+
+function showMapPresets() {
+    const results = document.getElementById('results');
+    const mapsClient = new WebMapsClient();
+
+    const presets = [
+        {
+            name: 'Full Traffic Overview',
+            description: 'All layers enabled for complete traffic picture',
+            config: { region: 'ALL', size: 'FULL', layers: Object.values(mapsClient.layers) }
+        },
+        {
+            name: 'Incidents Only',
+            description: 'Focus on traffic incidents and closures',
+            config: { region: 'ALL', size: 'LARGE', layers: ['Incidents', 'Closures', 'Construction'] }
+        },
+        {
+            name: 'Traffic Flow',
+            description: 'Traffic speeds and congestion information',
+            config: { region: 'ALL', size: 'LARGE', layers: ['TrafficSpeeds', 'Congestion', 'Cameras'] }
+        },
+        {
+            name: 'Gauteng Traffic',
+            description: 'Complete traffic view for Gauteng province',
+            config: { region: 'GP', size: 'FULL', layers: Object.values(mapsClient.layers) }
+        }
+    ];
+
+    let presetsHtml = `
+        <div class="result-item info">
+            <div class="result-header">
+                <h3>📋 Map Presets</h3>
+                <div class="result-meta">
+                    <span>Quick configurations for common use cases</span>
+                </div>
+            </div>
+            <div class="result-content">
+    `;
+
+    presets.forEach((preset, index) => {
+        const embedCode = mapsClient.generateEmbedCode(preset.config);
+        presetsHtml += `
+            <div class="map-preview">
+                <h4>${preset.name}</h4>
+                <p style="margin-bottom: 15px; color: #6c757d;">${preset.description}</p>
+                <div class="embed-code">${embedCode}</div>
+                <button class="btn btn-secondary" onclick="copyToClipboard(\`${embedCode.replace(/`/g, '\\`')}\`)" style="margin-top: 10px;">📋 Copy Embed Code</button>
+            </div>
+        `;
+    });
+
+    presetsHtml += `
+            </div>
+        </div>
+    `;
+
+    results.innerHTML = presetsHtml;
+    results.scrollIntoView({ behavior: 'smooth' });
+}
+
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        // Show temporary success message
+        const originalText = event.target.textContent;
+        event.target.textContent = '✅ Copied!';
+        setTimeout(() => {
+            event.target.textContent = originalText;
+        }, 2000);
+    }).catch(() => {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+
+        const originalText = event.target.textContent;
+        event.target.textContent = '✅ Copied!';
+        setTimeout(() => {
+            event.target.textContent = originalText;
+        }, 2000);
+    });
+}
+
 // Make functions globally available
 window.fetchAlerts = fetchAlerts;
 window.fetchCameras = fetchCameras;
@@ -393,3 +600,8 @@ window.getTrafficSummary = getTrafficSummary;
 window.getActiveCameras = getActiveCameras;
 window.getActiveEvents = getActiveEvents;
 window.performSearch = performSearch;
+window.showMapSection = showMapSection;
+window.generateMapEmbed = generateMapEmbed;
+window.generateMapUrl = generateMapUrl;
+window.showMapPresets = showMapPresets;
+window.copyToClipboard = copyToClipboard;
