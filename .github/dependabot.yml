@@ -11,11 +11,3 @@ updates:
     groups:
       dependencies:
         patterns: ["*"]
-
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    commit-message:
-      prefix: "chore(ci)"
