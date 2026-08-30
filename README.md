@@ -275,6 +275,10 @@ npm run serve
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
+Every pull request targeting `main` needs an approving review from a code owner
+(`@skynergroup/senior`) before it can be merged. Automated contributors are not
+code owners and cannot approve or merge their own work.
+
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
