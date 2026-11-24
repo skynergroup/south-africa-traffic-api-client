@@ -284,7 +284,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **Yashiel Sookdeo**
 Skyner Development
 📧 [development@skyner.co.za](mailto:development@skyner.co.za)
-📱 +27 61 524 4668
 
 *Developed based on the official [i-traffic.co.za API documentation](https://www.i-traffic.co.za/developers/help)*
 
